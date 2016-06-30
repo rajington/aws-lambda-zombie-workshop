@@ -172,8 +172,8 @@
           {"AttributeName": "timestamp", "KeyType": "RANGE"}
         ],
         "ProvisionedThroughput": {
-          "ReadCapacityUnits": 25,
-          "WriteCapacityUnits": 25
+          "ReadCapacityUnits": 10,
+          "WriteCapacityUnits": 10
         }
       }
     },
@@ -197,8 +197,8 @@
           {"AttributeName": "talktime", "KeyType": "RANGE"}
         ],
         "ProvisionedThroughput": {
-          "ReadCapacityUnits": 50,
-          "WriteCapacityUnits": 50
+          "ReadCapacityUnits": 10,
+          "WriteCapacityUnits": 10
         }
       }
     },
