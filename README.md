@@ -16,6 +16,8 @@ Each of these labs is an independent section and you may choose to do some or al
     This exercise integrates the popular messaging app, [Slack](http://slack.com), into the chat application so that survivors can send messages to the survivor chat from within the Slack app.
 *   **Intel Edison Zombie Motion Sensor** (IoT device required)
     This exercise integrates motion sensor detection of zombies to the chat system using an Intel Edison board and a Grove PIR Motion Sensor. You will configure a Lambda function to consume motion detection events and push them into the survivor chat!
+*   **Amazon Echo Integration**
+    This exercise integrates with the Amazon Echo using the Alexa Skills Kit. You will write a skill that provides tips to fight zombies, calculate supply levels, and interact with the  survivor chat!
 *   **Workshop Cleanup**  
     This section provides instructions to tear down your environment when you're done working on the labs.
 
@@ -395,7 +397,7 @@ If you aren't familiar with Slack, they offer a free chat communications service
 
 *   Slack provides a unique token associated with your integration. You are copying this token into your Lambda function as a form of validation. When incoming requests from Slack are sent to your API endpoint, and your Lambda function is invoked with the Slack payload, your Lambda function will check to verify that the incoming Token in the request matches the Token you provided in the code. If the token does not match, Lambda returns an error and doesn't process the request.
 
-12\. In the "post_options" host variable, you will insert the fully qualified domain name (FQDN) to your Chat Service (/zombie/message) API Gateway resource so that the HTTPS requests can be sent with the messages from Slack. It should show a value of "INSERT YOUR API GATEWAY FQDN HERE EXCLUDING THE HTTPS://" for the **host** variable on [line 42](/Slack/SlackService.js#L42). Replace this string with the FQDN of your **/message POST method**.  Your final FQDN inserted into the code should look something like "xxxxxxxx.execute-api.us-west-2.amazonaws.com". 
+12\. In the "post_options" host variable, you will insert the fully qualified domain name (FQDN) to your Chat Service (/zombie/message) API Gateway resource so that the HTTPS requests can be sent with the messages from Slack. It should show a value of "INSERT YOUR API GATEWAY FQDN HERE EXCLUDING THE HTTPS://" for the **host** variable on [line 42](/Slack/SlackService.js#L42). Replace this string with the FQDN of your **/message POST method**.  Your final FQDN inserted into the code should look something like "xxxxxxxx.execute-api.us-west-2.amazonaws.com".
 
 *   Your code is now configured to check if the token sent with the request matches the token for your Slack integration. If so, it parses the data and makes an HTTPS request to your **/message** endpoint with the message from Slack.
 
