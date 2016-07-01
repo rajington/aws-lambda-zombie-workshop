@@ -6,19 +6,19 @@ The [Zombie Microservices Workshop](http://aws.amazon.com/events/zombie-microser
 Each of these labs is an independent section and you may choose to do some or all of them, or in any order that you prefer.
 **What you will build...**
 
-*   **Typing Indicator**  
+*   [**Typing Indicator**](#lab-1---typing-indicator)
     This exercise already has the UI and backend implemented, and focuses on how to setup the API Gateway to provide a RESTful endpoint. You will configure the survivor chat application to display which survivors are currently typing in the chat room.
-*   **SMS Integration with Twilio**  
+*   [**SMS Integration with Twilio**](#lab-2---sms-integration-with-twilio)
     This exercise wires uses [Twilio](http://twilio.com) to integrate SMS text functionality with the survivor chat application. You will configure a free-trial Twilio phone number so that users can send text messages to the survivor chat application. You'll learn to leverage mapping templates in API Gateway to perform data transformations in an API.
-*   **Search Integration with Elasticsearch**  
+*   [**Search Integration with Elasticsearch**](#lab-3---search-over-the-chat-messages-with-elasticsearch-service)
     This exercise adds an Elasticsearch cluster to the application which is used to index chat messages streamed from the DynamoDB table containing chat messages.
-*   **Slack Integration**  
+*   [**Slack Integration**](#lab-4---slack-integration)
     This exercise integrates the popular messaging app, [Slack](http://slack.com), into the chat application so that survivors can send messages to the survivor chat from within the Slack app.
-*   **Intel Edison Zombie Motion Sensor** (IoT device required)
+*   [**Intel Edison Zombie Motion Sensor** (IoT device required)](#lab-5---motion-sensor-integration-with-intel-edison-and-grove)
     This exercise integrates motion sensor detection of zombies to the chat system using an Intel Edison board and a Grove PIR Motion Sensor. You will configure a Lambda function to consume motion detection events and push them into the survivor chat!
-*   **Amazon Echo Integration**
+*   [**Amazon Echo Integration**](#lab-5---amazon-echo-integration)
     This exercise integrates with the Amazon Echo using the Alexa Skills Kit. You will write a skill that provides tips to fight zombies, calculate supply levels, and interact with the  survivor chat!
-*   **Workshop Cleanup**  
+*   [**Workshop Cleanup**](#workshop-cleanup)
     This section provides instructions to tear down your environment when you're done working on the labs.
 
 * * *
