@@ -590,9 +590,9 @@ Using the things learned in this workshop, can you develop a Lambda function tha
 
 During the zombie apocalypse, sometimes it's useful to research or communicate while keeping your hands free. Sometimes you just need someone to talk to. In this section, you'll recruit Alexa to fight on the side of the living.
 
-### Zombie Defense features out of the box
+### Using the Echo Simulator
 
-In preparation for this event, Alexa ships with some useful zombie defense features out of the box. To test them, all you need is a browser. Head over to the [Echo Simulator at echosim.io](https://echosim.io/) and login as the same user as you did on AWS.
+In preparation for an event just like this, Alexa ships with some useful zombie defense features out of the box. To test them, all you need is a browser. Head over to the [Echo Simulator at echosim.io](https://echosim.io/) and login as the same user as you did on AWS.
 
 *If the room is too noisy you can try headphones, but there will also be ways to test **your** skills without using your voice and you can skip this part.*
 
@@ -605,6 +605,39 @@ Try asking Alexa useful questions like:
 * Remind me in an hour to change my bandages.
 
 *Answers in this simulator are localized to Lambda Corps headquarters in Seattle.*
+
+### Responding to the Skill's Launch
+
+Sometimes all you need is someone to talk to, and to know that you're part of something bigger. We'll write a very basic skill that welcomes new recruits to the Lambda Signal Corps.
+
+1. Navigate to the [Alexa Developer Console](https://developer.amazon.com/edw/home.html) and click **Get Started** under the **Alexa Skills Kit**.
+
+2. Click **Add a New Skill**
+
+BASIC LAUNCHREQUEST
+
+### Extending a Built-in Intent
+
+Alexa is already equipped with some [built-in intents](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/implementing-the-built-in-intents), so your skill can easily be trained to respond to "repeat" or "never mind" or "help" without training all those utterances. We can also extend the built-in intents.
+
+BASIC AMAZON.STOPINTENT WHEN USER SAYS THEY HAVE BEEN BIT
+
+### Basic Skill
+
+BASIC TRIVIA SKILL, MULTIPLE UTTERANCES
+
+### Input-based Skill
+
+BASIC MATH-BASED SKILL, "how much water will 5 gallons last 8 people"
+
+### Session Variables
+
+EXTEND MATH-BASED SKILL, asking/remembering how many people, "how much water do we need", "how much food do we need"  
+
+### Communication
+
+SUBMIT MESSAGES TO CHAT
+READ LAST MESSAGE
 
 * * *
 
