@@ -16,7 +16,7 @@ Each of these labs is an independent section and you may choose to do some or al
     This exercise integrates the popular messaging app, [Slack](http://slack.com), into the chat application so that survivors can send messages to the survivor chat from within the Slack app.
 *   [**Intel Edison Zombie Motion Sensor** (IoT device required)](#lab-5---motion-sensor-integration-with-intel-edison-and-grove)
     This exercise integrates motion sensor detection of zombies to the chat system using an Intel Edison board and a Grove PIR Motion Sensor. You will configure a Lambda function to consume motion detection events and push them into the survivor chat!
-*   [**Amazon Echo Integration**](#lab-5---amazon-echo-integration)
+*   [**Amazon Echo Integration**](#lab-6---amazon-echo-integration)
     This exercise integrates with the Amazon Echo using the Alexa Skills Kit. You will write a skill that provides tips to fight zombies, calculate supply levels, and interact with the  survivor chat!
 *   [**Workshop Cleanup**](#workshop-cleanup)
     This section provides instructions to tear down your environment when you're done working on the labs.
@@ -583,6 +583,30 @@ Using the things learned in this workshop, can you develop a Lambda function tha
 12\. In the code, modify the "host" variable under "post_options". Replace the string "INSERT YOUR API GATEWAY URL HERE" with your own URL for the **/messages** endpoint for the **POST** method. This is the "Invoke URL" which you can grab from the Stages page in the API Gateway console. It should look like **xxxxxxxx.execute-api.us-west-2.amazonaws.com**. Remember, don't input the "https://" portion of the URL, or anything after the ".com" portion.
 
 13\. Once you have overwritten your old code with the code provided by AWS, click the **Save** button to save your modified Lambda function. Almost immediately you should begin seeing zombie sensor messages showing up in the chat application which means your messages are successfully sending from the Intel Edison device to AWS, and into your chat application. This Lambda Function takes the zombie sensor message, parses it, and sends it to your chat application with an HTTPS POST request to your **/messages** endpoint. Congrats!
+
+* * *
+
+## Lab 6 - Amazon Echo Integration
+
+During the zombie apocalypse, sometimes it's useful to research or communicate while keeping your hands free. Sometimes you just need someone to talk to. In this section, you'll recruit Alexa to fight on the side of the living.
+
+### Zombie Defense features out of the box
+
+In preparation for this event, Alexa ships with some useful zombie defense features out of the box. To test them, all you need is a browser. Head over to the [Echo Simulator at echosim.io](https://echosim.io/) and login as the same user as you did on AWS.
+
+*If the room is too noisy you can try headphones, but there will also be ways to test **your** skills without using your voice and you can skip this part.*
+
+Try asking Alexa useful questions like:
+
+* What time is sunrise?
+
+* When is the next full moon?
+
+* Remind me in an hour to change my bandages.
+
+*Answers in this simulator are localized to Lambda Corps headquarters in Seattle.*
+
+* * *
 
 ## Workshop Cleanup
 
