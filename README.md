@@ -788,7 +788,7 @@ Despite Hollywood's best efforts to perpare us for zombies, we could always use 
 
 2. In the **Intent Schema** add another **TipsIntent**.
 
-	```diff
+	```
 	{
 	  "intents": [
 	    {
@@ -803,7 +803,7 @@ Despite Hollywood's best efforts to perpare us for zombies, we could always use 
 	
 3. Similarly, add to the Sample Utterances:
 
-	```diff
+	```
 	AMAZON.StopIntent I was bit
 	AMAZON.StopIntent a zombie bit me
 	AMAZON.StopIntent a zombie got me
@@ -812,6 +812,8 @@ Despite Hollywood's best efforts to perpare us for zombies, we could always use 
 	TipsIntent give me a zombie tip
 	TipsIntent tell me about zombies
 	```
+	
+4. Click **Save**.
 
 #### Updating the code in Lambda
 
@@ -854,17 +856,112 @@ exports.handler = function handler(event, context, callback) {
 };
 ```
 
-#### Testing the skill in the simulator
+#### Testing
 
 Congratulations! Alexa should now give you a tip when you say *"ask signal corps for a zombie tip"* or *"tell signal corps give me a zombie tip"*.
+
+### Session Variables
+
+Now that our users can't get enough zombie tips, they want to make sure they hear all of them in sequence rather than randomly. So far all our actions have been one-and-done, but in order to know what tip to read next we need to keep track of the tip we read last. We can do this using session variables.
+
+#### Updating the skill in Alexa
+
+1. In the Alexa Console, click on your skill's **Interaction Model** page.
+
+2. In the **Intent Schema** add some more built-in intents that let users hear the next tip, the previous tip, and the same tip repeated.
+
+	```
+	{
+	  "intents": [
+	    {
+	      "intent": "AMAZON.StopIntent"
+	    },
+	    {
+	      "intent": "TipsIntent"
+	    },
+	    {
+	      "intent": "AMAZON.PreviousIntent"
+	    },
+	    {
+	      "intent": "AMAZON.NextIntent"
+	    },
+	    {
+	      "intent": "AMAZON.RepeatIntent"
+	    }
+	  ]
+	}
+	```
+
+3. Click **Save**.
+
+#### Updating the code in Lambda
+
+Back in the Lambda Console, we first need to modify the code that builds our response to include the ability to not end the session (by passing in false to `shouldEndSession`), and add some `sessionAttributes` (a key/value store) to persist between the sessions. Then we need to check for the three additional built-in intents we added. If there's already an index saved in the session then we work from there, otherwise we pick a random one. Either way, we pass the index on to be persisted in the session.
+
+```javascript
+/* eslint no-var: 0, indent: ["error", 4], vars-on-top: 0, object-shorthand: 0 */
+
+var tips = [
+    'a quieter vehicle is better than a faster one',
+    'poorer neighborhoods are better equipped for thieves... and zombies',
+    'only travel during daylight hours',
+    'make sure you can put out a fire immediately',
+    'denim is not only fashionable but lightweight and pretty good against bites',
+    'shorter hair is harder for a zombie to grab onto',
+];
+
+// builds an Alexa-suitable response
+function buildResponse(message, shouldEndSession, sessionAttributes) {
+    return {
+        version: '1.0',
+        sessionAttributes: sessionAttributes,
+        response: {
+            outputSpeech: {
+                type: 'PlainText',
+                text: message,
+            },
+            shouldEndSession: shouldEndSession,
+        },
+    };
+}
+
+exports.handler = function handler(event, context, callback) {
+    if (event.request.type === 'LaunchRequest') {
+        callback(null, buildResponse('Welcome to the Lambda Signal Corps!', true));
+    } else if (event.request.type === 'IntentRequest') {
+        var intent = event.request.intent;
+        if (intent.name === 'AMAZON.StopIntent') {
+            callback(null, buildResponse('Good luck out there.', true));
+        } else if (intent.name === 'TipsIntent' ||
+                   intent.name === 'AMAZON.NextIntent' ||
+                   intent.name === 'AMAZON.PreviousIntent' ||
+                   intent.name === 'AMAZON.RepeatIntent') {
+            var index;
+            if (event.session.attributes && event.session.attributes.hasOwnProperty('tipIndex')) {
+                index = event.session.attributes.tipIndex;
+                if (intent.name === 'AMAZON.PreviousIntent') {
+                    index--;
+                } else if (intent.name !== 'AMAZON.RepeatIntent') {
+                    index++;
+                }
+                // clamp the index to be in the valid range, >= 0 and < length
+                index = (index + tips.length) % tips.length;
+            } else {
+                index = Math.floor(Math.random() * tips.length);
+            }
+            callback(null, buildResponse(tips[index], false, { tipIndex: index }));
+        }
+    }
+};
+```
+
+#### Testing
+
+Congratulations! Alexa should now give you a random tip like before, but now you can say "previous", "next", or "repeat that".
 
 ### Input-based Skill
 
 BASIC MATH-BASED SKILL, "how much water will 5 gallons last 8 people"
-
-### Session Variables
-
-EXTEND MATH-BASED SKILL, asking/remembering how many people, "how much water do we need", "how much food do we need"  
 
 ### Communication
 

@@ -5,6 +5,15 @@
     },
     {
       "intent": "TipsIntent"
+    },
+    {
+      "intent": "AMAZON.PreviousIntent"
+    },
+    {
+      "intent": "AMAZON.NextIntent"
+    },
+    {
+      "intent": "AMAZON.RepeatIntent"
     }
   ]
 }
