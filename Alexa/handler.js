@@ -23,13 +23,12 @@ function buildResponse(message, shouldEndSession, sessionAttributes) {
 }
 
 exports.handler = function handler(event, context, callback) {
-    var response = null;
     if (event.request.type === 'LaunchRequest') {
-        response = buildResponse('Welcome to the Lambda Signal Corps!', true);
+        callback(null, buildResponse('Welcome to the Lambda Signal Corps!', true));
     } else if (event.request.type === 'IntentRequest') {
         var intent = event.request.intent;
         if (intent.name === 'AMAZON.StopIntent') {
-            response = buildResponse('Good luck out there.', true);
+            callback(null, buildResponse('Good luck out there.', true));
         } else if (intent.name === 'TipsIntent' ||
                    intent.name === 'AMAZON.NextIntent' ||
                    intent.name === 'AMAZON.PreviousIntent' ||
@@ -47,7 +46,7 @@ exports.handler = function handler(event, context, callback) {
             } else {
                 index = Math.floor(Math.random() * tips.length);
             }
-            response = buildResponse(tips[index], false, { tipIndex: index });
+            callback(null, buildResponse(tips[index], false, { tipIndex: index }));
         } else if (intent.name === 'RationsIntent') {
             var days = intent.slots.Days;
             var people = intent.slots.People;
@@ -64,8 +63,7 @@ exports.handler = function handler(event, context, callback) {
                 people.value = Math.floor(gallons.value / days.value);
                 message = 'You only have enough for ' + people.value + ' people.';
             }
-            response = buildResponse(message, true);
+            callback(null, buildResponse(message, true));
         }
     }
-    callback(null, response);
 };
