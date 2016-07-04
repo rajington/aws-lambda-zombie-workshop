@@ -1,1 +1,3 @@
-DummyIntent dummy
+AMAZON.StopIntent I was bit
+AMAZON.StopIntent a zombie bit me
+AMAZON.StopIntent a zombie got me

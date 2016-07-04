@@ -592,7 +592,7 @@ During the zombie apocalypse, sometimes it's useful to research or communicate w
 
 ### Using the Echo Simulator
 
-In preparation for an event just like this, Alexa ships with some useful zombie defense features out of the box and you only need a browser to test them. Head over to the [Echo Simulator at echosim.io](https://echosim.io/) and login as the same user as you did on AWS. You may need to allow the site to use your microphone.
+In preparation for an event just like this, Alexa ships with some useful zombie defense features out of the box and you only need a browser to test them. Head over to the [Echo Simulator](https://echosim.io/) and login as the same user as you did on AWS. You may need to allow the site to use your microphone.
 
 *If the room is too noisy you can try headphones, but there will also be ways to test **your** skills without using your voice and you can skip this part.*
 
@@ -716,9 +716,65 @@ The response will be less exciting, simply the JSON response from Lambda with so
 
 ### Extending a Built-in Intent
 
-Alexa is already equipped with some [built-in intents](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/implementing-the-built-in-intents), so your skill can easily be trained to respond to "repeat" or "never mind" or "help" without training all those utterances. We can also extend the built-in intents.
+Alexa is already equipped with some [built-in intents](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/implementing-the-built-in-intents), so your skill can perform the "stop" action even if the user says "shut up". You can also extend built-in intents so it can listen for utterances that make sense for your skill.
 
-BASIC AMAZON.STOPINTENT WHEN USER SAYS THEY HAVE BEEN BIT
+#### Updating the skill in Alexa
+
+1. In the Alexa Console, click on your skill's **Interaction Model** page.
+
+2. In the **Intent Schema** replace the **TestIntent** with the built-intent for "stop": **AMAZON.StopIntent **.
+
+	```javascript
+	{
+	  "intents": [
+	    {
+	      "intent": "AMAZON.StopIntent"
+	    }
+	  ]
+	}
+	```
+	
+3. Alexa is cruel, as soon as she realizes you've been bit she's done with you. In the **Sample Utterances**, remove the test line and add some new ways to tell Alexa to stop, mapping `AMAZON.StopIntent` to some new phrases:
+
+	```
+	AMAZON.StopIntent I was bit
+	AMAZON.StopIntent a zombie bit me
+	AMAZON.StopIntent a zombie got me
+	```
+
+#### Updating the code in Lambda
+
+Back in the Lambda Console, we need to update the code so it knows when someone is simply *launching* the skill vs. calling one of the skill's *intents* by referring to the [structure of the request](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference) sent the Lambda function. We can also extract out some code to help build Alexa JSON responses.
+
+```javascript
+function buildResponse(message) {
+    return {
+        version: '1.0',
+          response: {
+              outputSpeech: {
+                  type: 'PlainText',
+                  text: message,
+              },
+          },
+    };
+}
+
+exports.handler = function handler(event, context, callback) {
+    if (event.request.type === 'LaunchRequest') {
+        callback(null, buildResponse('Welcome to the Lambda Signal Corps!'));
+    } else if (event.request.type === 'IntentRequest') {
+        callback(null, buildResponse('Good luck out there.'));
+    }
+};
+```
+
+#### Testing the skill in the simulator
+
+Congratulations! Alexa should now welcome you when you say *"launch signal corps"* and wish you luck when you say *"tell signal corps i was bit"* or even *"tell signal corps to stop"* (the built-in utterance).
+
+##### Testing without voice
+
+Rather than test using **Json** like before, in your skill's **Test** page you can select the **Text** tab and simply enter *"I was bit"* or even *"stop"* (the built-in utterance).
 
 ### Basic Skill
 
