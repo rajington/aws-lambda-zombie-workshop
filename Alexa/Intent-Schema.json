@@ -2,6 +2,9 @@
   "intents": [
     {
       "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "TipsIntent"
     }
   ]
 }

@@ -1,3 +1,7 @@
 AMAZON.StopIntent I was bit
 AMAZON.StopIntent a zombie bit me
 AMAZON.StopIntent a zombie got me
+
+TipsIntent a zombie tip
+TipsIntent give me a zombie tip
+TipsIntent tell me about zombies

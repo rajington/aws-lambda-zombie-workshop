@@ -780,7 +780,83 @@ Rather than test using **Json** like before, in your skill's **Test** page you c
 
 ### Basic Skill
 
-BASIC TRIVIA SKILL, MULTIPLE UTTERANCES
+Despite Hollywood's best efforts to perpare us for zombies, we could always use more tips. Let's write a custom intent to supply just that.
+
+#### Updating the skill in Alexa
+
+1. In the Alexa Console, click on your skill's **Interaction Model** page.
+
+2. In the **Intent Schema** add another **TipsIntent**.
+
+	```diff
+	{
+	  "intents": [
+	    {
+	      "intent": "AMAZON.StopIntent"
+	    },
+	    {
+	      "intent": "TipsIntent"
+	    }
+	  ]
+	}
+	```
+	
+3. Similarly, add to the Sample Utterances:
+
+	```diff
+	AMAZON.StopIntent I was bit
+	AMAZON.StopIntent a zombie bit me
+	AMAZON.StopIntent a zombie got me
+	
+	TipsIntent a zombie tip
+	TipsIntent give me a zombie tip
+	TipsIntent tell me about zombies
+	```
+
+#### Updating the code in Lambda
+
+Back in the Lambda Console, we add some more code to check the specific intent that was launched and pick a random tip from an array.
+
+```javascript
+var tips = [
+    'a quieter vehicle is better than a faster one',
+    'poorer neighborhoods are better equipped for thieves... and zombies',
+    'only travel during daylight hours',
+    'make sure you can put out a fire immediately',
+    'denim is not only fashionable but lightweight and pretty good against bites',
+    'shorter hair is harder for a zombie to grab onto',
+];
+
+function buildResponse(message) {
+    return {
+        version: '1.0',
+          response: {
+              outputSpeech: {
+                  type: 'PlainText',
+                  text: message,
+              },
+          },
+    };
+}
+
+exports.handler = function handler(event, context, callback) {
+    if (event.request.type === 'LaunchRequest') {
+        callback(null, buildResponse('Welcome to the Lambda Signal Corps!'));
+    } else if (event.request.type === 'IntentRequest') {
+        var intent = event.request.intent;
+        if (intent.name === 'AMAZON.StopIntent') {
+            callback(null, buildResponse('Good luck out there.'));
+        } else if (intent.name === 'TipsIntent') {
+            var randomIndex = Math.floor(Math.random() * tips.length);
+            callback(null, buildResponse(tips[randomIndex]));
+        }
+    }
+};
+```
+
+#### Testing the skill in the simulator
+
+Congratulations! Alexa should now give you a tip when you say *"ask signal corps for a zombie tip"* or *"tell signal corps give me a zombie tip"*.
 
 ### Input-based Skill
 
