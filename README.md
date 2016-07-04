@@ -1067,9 +1067,9 @@ exports.handler = function handler(event, context, callback) {
 
 Congratulations! Alexa should now do your math when you say:
 
-* *how much water do 10 people need for 7 days*
-* *how long will 100 gallons last 5 people*
-* *how many people can live on 10 gallons for 5 days*
+* *how much water do ten people need for seven days*
+* *how long will a hundred gallons last five people*
+* *how many people can live on ten gallons for five days*
 
 ### Communication
 
