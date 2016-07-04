@@ -592,7 +592,7 @@ During the zombie apocalypse, sometimes it's useful to research or communicate w
 
 ### Using the Echo Simulator
 
-In preparation for an event just like this, Alexa ships with some useful zombie defense features out of the box. To test them, all you need is a browser. Head over to the [Echo Simulator at echosim.io](https://echosim.io/) and login as the same user as you did on AWS.
+In preparation for an event just like this, Alexa ships with some useful zombie defense features out of the box and you only need a browser to test them. Head over to the [Echo Simulator at echosim.io](https://echosim.io/) and login as the same user as you did on AWS. You may need to allow the site to use your microphone.
 
 *If the room is too noisy you can try headphones, but there will also be ways to test **your** skills without using your voice and you can skip this part.*
 
@@ -608,13 +608,111 @@ Try asking Alexa useful questions like:
 
 ### Responding to the Skill's Launch
 
-Sometimes all you need is someone to talk to, and to know that you're part of something bigger. We'll write a very basic skill that welcomes new recruits to the Lambda Signal Corps.
+Sometimes all you need is someone to talk to, and to know that you're part of something bigger. We'll write a very basic skill that welcomes new recruits to the Lambda Signal Corps. We will be using dummy information to get past some steps while skipping many steps altogether.
 
-1. Navigate to the [Alexa Developer Console](https://developer.amazon.com/edw/home.html) and click **Get Started** under the **Alexa Skills Kit**.
+#### Creating the skill in Lambda
 
-2. Click **Add a New Skill**
+1. Open the [Lambda Console](https://console.aws.amazon.com/lambda/home) and **Create a Lambda function**.
 
-BASIC LAUNCHREQUEST
+2. Although there are sample Alexa skills in the blueprints section, we can **Skip** it and start one from scratch.
+
+3. Name your function something that makes sense like "signal-corps-skill"
+
+4. In the code editor below, we'll create the simplest skill possible:
+
+	```javascript
+	exports.handler = function handler(event, context, callback) {
+	    callback(null, {
+	        version: '1.0',
+	        response: {
+	            outputSpeech: {
+	                type: 'PlainText',
+	                text: 'Welcome to the Lambda Signal Corps',
+	            },
+	        },
+	    });
+	};
+	```
+	All the function really does, is immediately return (using the [new callback parameter](http://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-handler.html#nodejs-prog-model-handler-callback)) with a hard-coded JSON response. The JSON follows the format that Alexa expects, with the mandatory version number and what to actually say.
+	
+5. For the **Role**, select the "basic execution role" option or choose an exisitng basic_execution_role if one exists. On the pop-up page asking you to confirm the creation of that role, click **Allow** through that. This role simply allows you to push events to CloudWatch Logs from Lambda.
+
+6. Leave all other options as default on the Lambda creation page and click **Next**.
+
+7. Click **Create function**.
+
+8. Next we have to enable the lambda function to receive commands from Alexa. On the skill's page, select the **Event sources** tab and **Add event source**, then in the **Event source type** select **Alexa Skills Kit** and hit **Submit**.
+
+9. In order to tell Alexa about the skill, we need to copy its **ARN** located in the top-right corner, it should look something like *arn:aws:lambda:REGION:IDENTIFIER:function:signal-corps-skill*.
+
+#### Creating the skill in Alexa
+
+1. Open the [Alexa Developer Console](https://developer.amazon.com/edw/home.html) in another window and click **Get Started** under the **Alexa Skills Kit**.
+
+2. Click **Add a New Skill**.
+
+3. On the **Skill Information** step, fill in something like "Signal Corps" for both the **Name** and **Invocation Name** and click **Next**.
+
+	> On this screen you define your *interaction model*, mapping a user verbal commands or *utterances* to your service's actions or *intents*. Right now are service doesn't do much, and we can just put in dummy information so it's not blank. We'll come back to it later and give it braaaaiiiiiins.
+
+4. On the **Interaction Model** step, enter a dummy intent in the **Intent Schema** for now.
+
+	```
+	{
+	  "intents": [
+	    {
+	      "intent": "TestIntent"
+	    }
+	  ]
+	}
+	```
+
+5. Enter a dummy utterance in the **Sample Utterances** as well and click **Next**.
+
+	```
+	TestIntent test
+	```
+
+6. On the **Configuration** step, set **Endpiont** to **Lambda ARN** and enter the ARN you copied earlier, it should look something like *arn:aws:lambda:REGION:IDENTIFIER:function:signal-corps-skill*.
+
+7. For **Account Linking** answer **No** and click **Next**.
+
+8. On the **Test** page the switch under **Start testing this skill** should already be set to **Enable** and you're ready to test using the simulator or your own Alexa!
+	
+#### Testing the skill in the simulator
+
+1. Open the [Echo Simulator](https://echosim.io/), and login as the same user as the AWS Console. You may need to allow the site to use your microphone.
+
+2. **Push and hold** the microphone button above the Echo and say "launch signal corps".
+
+Congratulations! You should hear "Welcome to the Lambda Signal Corps"! You can easily change the message in the Lambda console and hear the new response instantly.
+
+##### Testing without voice
+
+If you need to test without using your voice, on the **Test** page for your Alexa skill you can set the **Service Simulator** to **Json** and test using the sample LaunchRequest below:
+	
+```javascript	
+{
+  "session": {
+    "new": true,
+    "sessionId": "session1234",
+    "attributes": {},
+    "user": {
+      "userId": null
+    },
+    "application": {
+      "applicationId": "amzn1.echo-sdk-ams.app.[unique-value-here]"
+    }
+  },
+  "version": "1.0",
+  "request": {
+    "type": "LaunchRequest",
+    "requestId": "request5678"
+  }
+}
+```
+
+The response will be less exciting, simply the JSON response from Lambda with some additional field defaults.
 
 ### Extending a Built-in Intent
 
