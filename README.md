@@ -685,7 +685,9 @@ Sometimes all you need is someone to talk to, and to know that you're part of so
 
 2. **Push and hold** the microphone button above the Echo and say "launch signal corps".
 
-Congratulations! You should hear "Welcome to the Lambda Signal Corps"! You can easily change the message in the Lambda console and hear the new response instantly.
+Congratulations! You should hear "Welcome to the Lambda Signal Corps"! You can easily change the message in the Lambda console and hear the new response instantly, but a change in the Alexa console takes a couple of seconds. When you update a section, you will see a spinner instead of a green check.
+
+![Skill Updating](/Images/Alexa-Skill-Updating.png)
 
 ##### Testing without voice
 
