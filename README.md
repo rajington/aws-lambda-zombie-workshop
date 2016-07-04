@@ -961,7 +961,115 @@ Congratulations! Alexa should now give you a random tip like before, but now you
 
 ### Input-based Skill
 
-BASIC MATH-BASED SKILL, "how much water will 5 gallons last 8 people"
+Math is hard, harder if you've spent the day fighting off zombies. It'd help if Alexa could handle calculating your water rations for you. Thankfully, the math is so simple that you can test easily: each person needs one gallon of water per day.
+
+#### Updating the skill in Alexa
+
+1. In the Alexa Console, click on your skill's **Interaction Model** page.
+
+2. In the **Intent Schema** add a new **RationsIntent**. This intent is more powerful than the others, it can take in number values.
+
+	```
+	{
+	  "intents": [
+	  	...
+	    {
+		  "intent": "RationsIntent",
+	      "slots": [
+	        {
+	          "name": "Gallons",
+	          "type": "AMAZON.NUMBER"
+	        },
+	        {
+	          "name": "People",
+	          "type": "AMAZON.NUMBER"
+	        },
+	        {
+	          "name": "Days",
+	          "type": "AMAZON.NUMBER"
+	        }
+	      ]
+	    }
+	  ]
+	}
+	```
+	
+	> Alexa has a better built-in intent, `AMAZON.DURATION`, for a time duration but for simplicity we'll just use `AMAZON.NUMBER`.
+	
+3. Similarly, we build utterances around supplying our intent two of the three inputs and having it calculate the third. 
+
+	```
+	...
+	RationsIntent how much water do {People} people need for {Days} days
+	RationsIntent how long will {Gallons} gallons last for {People} people
+	RationsIntent how many people can live on {Gallons} gallons for {Days} days
+	```
+	
+4. Click **Save**.
+
+#### Updating the code in Lambda
+
+Back in the Lambda Console, we add some more code to check for the new intent and use the intent's `slots` object for values, calculating and creating a response for the one that is missing.
+
+```javascript
+...
+
+exports.handler = function handler(event, context, callback) {
+    var response = null;
+    if (event.request.type === 'LaunchRequest') {
+        response = buildResponse('Welcome to the Lambda Signal Corps!', true);
+    } else if (event.request.type === 'IntentRequest') {
+        var intent = event.request.intent;
+        if (intent.name === 'AMAZON.StopIntent') {
+            response = buildResponse('Good luck out there.', true);
+        } else if (intent.name === 'TipsIntent' ||
+                   intent.name === 'AMAZON.NextIntent' ||
+                   intent.name === 'AMAZON.PreviousIntent' ||
+                   intent.name === 'AMAZON.RepeatIntent') {
+            var index;
+            if (event.session.attributes && event.session.attributes.hasOwnProperty('tipIndex')) {
+                index = event.session.attributes.tipIndex;
+                if (intent.name === 'AMAZON.PreviousIntent') {
+                    index--;
+                } else if (intent.name !== 'AMAZON.RepeatIntent') {
+                    index++;
+                }
+                // clamp the index to be in the valid range, >= 0 and < length
+                index = (index + tips.length) % tips.length;
+            } else {
+                index = Math.floor(Math.random() * tips.length);
+            }
+            response = buildResponse(tips[index], false, { tipIndex: index });
+        } else if (intent.name === 'RationsIntent') {
+            var days = intent.slots.Days;
+            var people = intent.slots.People;
+            var gallons = intent.slots.Gallons;
+
+            var message;
+            if (!days.hasOwnProperty('value')) {
+                days.value = Math.round(gallons.value / people.value);
+                message = 'You will run out of water in about ' + days.value + ' days.';
+            } else if (!gallons.hasOwnProperty('value')) {
+                gallons.value = Math.ceil(days.value * people.value);
+                message = gallons.value + ' gallons should be enough.';
+            } else if (!people.hasOwnProperty('value')) {
+                people.value = Math.floor(gallons.value / days.value);
+                message = 'You only have enough for ' + people.value + ' people.';
+            }
+            response = buildResponse(message, true);
+        }
+    }
+    callback(null, response);
+};
+```
+
+#### Testing
+
+Congratulations! Alexa should now do your math when you say:
+
+* *how much water do 10 people need for 7 days*
+* *how long will 100 gallons last 5 people*
+* *how many people can live on 10 gallons for 5 days*
 
 ### Communication
 

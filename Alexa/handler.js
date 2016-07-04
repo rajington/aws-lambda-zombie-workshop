@@ -23,12 +23,13 @@ function buildResponse(message, shouldEndSession, sessionAttributes) {
 }
 
 exports.handler = function handler(event, context, callback) {
+    var response = null;
     if (event.request.type === 'LaunchRequest') {
-        callback(null, buildResponse('Welcome to the Lambda Signal Corps!', true));
+        response = buildResponse('Welcome to the Lambda Signal Corps!', true);
     } else if (event.request.type === 'IntentRequest') {
         var intent = event.request.intent;
         if (intent.name === 'AMAZON.StopIntent') {
-            callback(null, buildResponse('Good luck out there.', true));
+            response = buildResponse('Good luck out there.', true);
         } else if (intent.name === 'TipsIntent' ||
                    intent.name === 'AMAZON.NextIntent' ||
                    intent.name === 'AMAZON.PreviousIntent' ||
@@ -46,7 +47,25 @@ exports.handler = function handler(event, context, callback) {
             } else {
                 index = Math.floor(Math.random() * tips.length);
             }
-            callback(null, buildResponse(tips[index], false, { tipIndex: index }));
+            response = buildResponse(tips[index], false, { tipIndex: index });
+        } else if (intent.name === 'RationsIntent') {
+            var days = intent.slots.Days;
+            var people = intent.slots.People;
+            var gallons = intent.slots.Gallons;
+
+            var message;
+            if (!days.hasOwnProperty('value')) {
+                days.value = Math.round(gallons.value / people.value);
+                message = 'You will run out of water in about ' + days.value + ' days.';
+            } else if (!gallons.hasOwnProperty('value')) {
+                gallons.value = Math.ceil(days.value * people.value);
+                message = gallons.value + ' gallons should be enough.';
+            } else if (!people.hasOwnProperty('value')) {
+                people.value = Math.floor(gallons.value / days.value);
+                message = 'You only have enough for ' + people.value + ' people.';
+            }
+            response = buildResponse(message, true);
         }
     }
+    callback(null, response);
 };
