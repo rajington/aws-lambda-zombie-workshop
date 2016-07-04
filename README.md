@@ -1071,8 +1071,89 @@ Congratulations! Alexa should now do your math when you say:
 
 ### Communication
 
-SUBMIT MESSAGES TO CHAT
-READ LAST MESSAGE
+When your hands are full fending off a horde of zombies, you can't waste any time typing to call for reinforcements. Here we ask survivor chat for reinforcements at your checkpoint number using the chat service.
+
+#### Updating the skill in Alexa
+
+1. In the Alexa Console, click on your skill's **Interaction Model** page.
+
+2. In the **Intent Schema** add a new **ReinforcementsIntent** that takes in a checkpoint number.
+
+	```
+	{
+	  "intents": [
+	  	...
+	    {
+		  "intent": "ReinforcementsIntent",
+	      "slots": [
+	        {
+	          "name": "Checkpoint",
+	          "type": "AMAZON.NUMBER"
+	        }
+	      ]
+	    }
+	  ]
+	}
+	```
+		
+3. Similarly, add to the Sample Utterances:
+
+	```
+	...
+	ReinforcementsIntent we need backup at checkpoint {Checkpoint}
+	ReinforcementsIntent checkpoint {Checkpoint} is being overrun	```
+	
+4. Click **Save**.
+
+#### Updating the code in Lambda
+
+Back in the Lambda Console, we get the checkpoint slot from the intent and fire off a message to the chat. Be sure to configure your API Gateway URL in the `options` object.
+
+```javascript
+exports.handler = function handler(event, context, callback) {
+		...
+        } else if (intent.name === 'ReinforcementsIntent') {
+            var checkpoint = intent.slots.Checkpoint.value;
+
+            var data = JSON.stringify({
+                message: 'Reinforcements needed at checkpoint ' + checkpoint,
+                name: 'Alexa',
+                channel: 'default',
+            });
+
+            // Object of options to designate where to send our request
+            var options = {
+                host: 'INSERT YOUR API GATEWAY URL HERE',
+                port: '443',
+                path: '/ZombieWorkshopStage/zombie/message',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Content-Length': data.length,
+                },
+            };
+
+            var req = https.request(options, function (res) {
+                var body = '';
+                res.setEncoding('utf8');
+                res.on('data', function (chunk) {
+                    body += chunk;
+                });
+
+                res.on('end', function () {
+                    callback(null, buildResponse('Message sent', true));
+                });
+            });
+            req.write(data);
+            req.end();
+        }
+    }
+};
+```
+
+#### Testing
+
+With the zombie chat open say "tell signal corps we need backup at checkpoint 3" and watch it show up in chat!
 
 * * *
 
