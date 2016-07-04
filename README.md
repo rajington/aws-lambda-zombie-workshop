@@ -588,7 +588,13 @@ Using the things learned in this workshop, can you develop a Lambda function tha
 
 ## Lab 6 - Amazon Echo Integration
 
-During the zombie apocalypse, sometimes it's useful to research or communicate while keeping your hands free. Sometimes you just need someone to talk to. In this section, you'll recruit Alexa to fight on the side of the living.
+During the zombie apocalypse, sometimes you need to communicate while keeping your hands free. Sometimes you just need someone to talk to. In this section, you'll recruit Alexa to fight on the side of the living.
+
+> This lab is significantly longer because it evolves a simple skill into something much more complex. If you're just interested in the final product you can use the final intent schema, sample utterances, custom slot, and lambda handler in the [Alexa folder](/Alexa).
+
+> The lab focuses on minimizing the amount of code to consider instead of properly handling all errors, covering all cases, or writing proper, maintainable, and compartmentalized code. Some sections will also have a section for approaches to expand functionality.
+
+> Additionally, this skill could be written better using Node.js libraries like [`request`](https://github.com/request/request) but that would add to the complexity. There are also Alexa frameworks such as [`alexa-app`](https://github.com/matt-kruse/alexa-app) and [`alexa-annotations`](https://github.com/cameronhunter/alexa-annotations) for Node.js or [`flask-ask`](https://github.com/johnwheeler/flask-ask) for Python.
 
 ### Using the Echo Simulator
 
@@ -635,7 +641,7 @@ Sometimes all you need is someone to talk to, and to know that you're part of so
 	```
 	All the function really does, is immediately return (using the [new callback parameter](http://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-handler.html#nodejs-prog-model-handler-callback)) with a hard-coded JSON response. The JSON follows the format that Alexa expects, with the mandatory version number and what to actually say.
 	
-5. For the **Role**, select the "basic execution role" option or choose an exisitng basic_execution_role if one exists. On the pop-up page asking you to confirm the creation of that role, click **Allow** through that. This role simply allows you to push events to CloudWatch Logs from Lambda.
+5. For the **Role**, select the "basic execution role" option or choose an existing basic_execution_role if one exists. On the pop-up page asking you to confirm the creation of that role, click **Allow** through that. This role simply allows you to push events to CloudWatch Logs from Lambda.
 
 6. Leave all other options as default on the Lambda creation page and click **Next**.
 
@@ -673,7 +679,7 @@ Sometimes all you need is someone to talk to, and to know that you're part of so
 	TestIntent test
 	```
 
-6. On the **Configuration** step, set **Endpiont** to **Lambda ARN** and enter the ARN you copied earlier, it should look something like *arn:aws:lambda:REGION:IDENTIFIER:function:signal-corps-skill*.
+6. On the **Configuration** step, set **Endpoint** to **Lambda ARN** and enter the ARN you copied earlier, it should look something like *arn:aws:lambda:REGION:IDENTIFIER:function:signal-corps-skill*.
 
 7. For **Account Linking** answer **No** and click **Next**.
 
@@ -780,7 +786,7 @@ Rather than test using **Json** like before, in your skill's **Test** page you c
 
 ### Basic Skill
 
-Despite Hollywood's best efforts to perpare us for zombies, we could always use more tips. Let's write a custom intent to supply just that.
+Despite Hollywood's best efforts to prepare us for zombies, we could always use more tips. Let's write a custom intent to supply just that.
 
 #### Updating the skill in Alexa
 
@@ -899,8 +905,6 @@ Now that our users can't get enough zombie tips, they want to make sure they hea
 Back in the Lambda Console, we first need to modify the code that builds our response to include the ability to not end the session (by passing in false to `shouldEndSession`), and add some `sessionAttributes` (a key/value store) to persist between the sessions. Then we need to check for the three additional built-in intents we added. If there's already an index saved in the session then we work from there, otherwise we pick a random one. Either way, we pass the index on to be persisted in the session.
 
 ```javascript
-/* eslint no-var: 0, indent: ["error", 4], vars-on-top: 0, object-shorthand: 0 */
-
 var tips = [
     'a quieter vehicle is better than a faster one',
     'poorer neighborhoods are better equipped for thieves... and zombies',
@@ -1157,7 +1161,7 @@ With the zombie chat open say *"tell signal corps we need backup at checkpoint 3
 
 ### Custom Slot Types
 
-We got lazy and named our checkpoint numbers, that's not realistic at all! Let's change it to Greek letters, like they do in the movies! Alexa obviously doesn't have a built-in slot type for Greek letters s we just need to add one.
+We got lazy and named our checkpoints using numbers, that's not realistic at all! Let's change it to Greek letters, like they do in the movies! Alexa obviously doesn't have a built-in slot type for Greek letters s we just need to add one.
 
 #### Updating the skill in Alexa
 
@@ -1193,7 +1197,7 @@ We got lazy and named our checkpoint numbers, that's not realistic at all! Let's
 	}
 	```
 		
-6. We don't need to update the *sample utterances* because we're still listening for the checkpoing in the same way.
+6. We don't need to update the *sample utterances* because we're still listening for the checkpoint in the same way.
 
 7. Click **Save**.
 
