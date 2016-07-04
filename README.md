@@ -612,7 +612,7 @@ Try asking Alexa useful questions like:
 
 *Answers in this simulator are localized to Lambda Corps headquarters in Seattle.*
 
-### Responding to the Skill's Launch
+### Responding to the Skill's Launch [*diff*](../../commit/cce078f3493508f2a2ee559525388ee37c8be3e5)
 
 Sometimes all you need is someone to talk to, and to know that you're part of something bigger. We'll write a very basic skill that welcomes new recruits to the Lambda Signal Corps. We will be using dummy information to get past some steps while skipping many steps altogether.
 
@@ -722,7 +722,7 @@ If you need to test without using your voice, on the **Test** page for your Alex
 
 The response will be less exciting, simply the JSON response from Lambda with some additional field defaults.
 
-### Extending a Built-in Intent
+### Extending a Built-in Intent [*diff*](../../commit/52e5bd773529d025c6eb5304534777b33f486547)
 
 Alexa is already equipped with some [built-in intents](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/implementing-the-built-in-intents), so your skill can perform the "stop" action even if the user says "shut up". You can also extend built-in intents so it can listen for utterances that make sense for your skill.
 
@@ -784,7 +784,7 @@ Congratulations! Alexa should now welcome you when you say *"launch signal corps
 
 Rather than test using **Json** like before, in your skill's **Test** page you can select the **Text** tab and simply enter *"I was bit"* or even *"stop"* (the built-in utterance).
 
-### Basic Skill
+### Basic Skill [*diff*](../../commit/551d83cc472c57cebe4388a99c7b89c4ee80968c)
 
 Despite Hollywood's best efforts to prepare us for zombies, we could always use more tips. Let's write a custom intent to supply just that.
 
@@ -866,7 +866,7 @@ exports.handler = function handler(event, context, callback) {
 
 Congratulations! Alexa should now give you a tip when you say *"ask signal corps for a zombie tip"* or *"tell signal corps give me a zombie tip"*.
 
-### Session Variables
+### Session Variables [*diff*](../../commit/dbaf86f9dfff4f5ac802f4c5df8e0b69ed1a7aeb)
 
 Now that our users can't get enough zombie tips, they want to make sure they hear all of them in sequence rather than randomly. So far all our actions have been one-and-done, but in order to know what tip to read next we need to keep track of the tip we read last. We can do this using session variables.
 
@@ -963,7 +963,7 @@ exports.handler = function handler(event, context, callback) {
 
 Congratulations! Alexa should now give you a random tip like before, but now you can say "previous", "next", or "repeat that".
 
-### Input-based Skill
+### Input-based Skill [*diff*](../../commit/2cdc70f344518517fc0c2caff1b62940200aaeb4)
 
 Math is hard, harder if you've spent the day fighting off zombies. It'd help if Alexa could handle calculating your water rations for you. Thankfully, the math is so simple that you can test easily: each person needs one gallon of water per day.
 
@@ -1073,7 +1073,7 @@ Congratulations! Alexa should now do your math when you say:
 * *how long will one hundred gallons last five people*
 * *how many people can live on ten gallons for five days*
 
-### Communication
+### Communication [*diff*](../../commit/c192daf470c18d34a98c0f368f4552eb4e5d091d)
 
 When your hands are full fending off a horde of zombies, you can't waste any time typing to call for reinforcements. Here we ask survivor chat for reinforcements at your checkpoint number using the chat service.
 
@@ -1159,7 +1159,7 @@ exports.handler = function handler(event, context, callback) {
 
 With the zombie chat open say *"tell signal corps we need backup at checkpoint 3"* and watch it show up in chat!
 
-### Custom Slot Types
+### Custom Slot Types [*diff*](../../commit/02f243300ed84b506c64748b38963324ea55d0e4)
 
 We got lazy and named our checkpoints using numbers, that's not realistic at all! Let's change it to Greek letters, like they do in the movies! Alexa obviously doesn't have a built-in slot type for Greek letters s we just need to add one.
 
