@@ -1153,7 +1153,57 @@ exports.handler = function handler(event, context, callback) {
 
 #### Testing
 
-With the zombie chat open say "tell signal corps we need backup at checkpoint 3" and watch it show up in chat!
+With the zombie chat open say *"tell signal corps we need backup at checkpoint 3"* and watch it show up in chat!
+
+### Custom Slot Types
+
+We got lazy and named our checkpoint numbers, that's not realistic at all! Let's change it to Greek letters, like they do in the movies! Alexa obviously doesn't have a built-in slot type for Greek letters s we just need to add one.
+
+#### Updating the skill in Alexa
+
+1. In the Alexa Console, click on your skill's **Interaction Model** page.
+
+2. Click **Add Slot Type**.
+
+3. For the **Type** let's put *GREEK_LETTERS*.
+
+4. For the **Values** you can use the following list of all the cooler sounding letters:
+
+	```
+	Alpha
+	Beta
+	Gamma
+	Delta
+	Epsilon
+	Zeta
+	Omega
+	```
+
+5. Using the new slot we can change our intent:
+
+	```javascript
+    {
+	  "intent": "ReinforcementsIntent",
+	  "slots": [
+	    {
+	      "name": "Checkpoint",
+	      "type": "GREEK_LETTERS"
+	    }
+	  ]
+	}
+	```
+		
+6. We don't need to update the *sample utterances* because we're still listening for the checkpoing in the same way.
+
+7. Click **Save**.
+
+#### Updating the code in Lambda
+
+Although we were previously parsing the checkpoint number, we simply passed it into the message so even though we've switched to string checkpoints there's nothing we need to change in code.
+
+#### Testing
+
+With the zombie chat open test using the new Greek letters, but you can even try saying *"tell signal corps we need backup at checkpoint cat"* and watch Alexa match it to the closest option: **gamma**!
 
 * * *
 
