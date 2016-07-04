@@ -9,3 +9,6 @@ TipsIntent tell me about zombies
 RationsIntent how much water do {People} people need for {Days} days
 RationsIntent how long will {Gallons} gallons last {People} people
 RationsIntent how many people can live on {Gallons} gallons for {Days} days
+
+ReinforcementsIntent we need backup at checkpoint {Checkpoint}
+ReinforcementsIntent checkpoint {Checkpoint} is being overrun

@@ -1,3 +1,5 @@
+var https = require('https');
+
 var tips = [
     'a quieter vehicle is better than a faster one',
     'poorer neighborhoods are better equipped for thieves... and zombies',
@@ -64,6 +66,40 @@ exports.handler = function handler(event, context, callback) {
                 message = 'You only have enough for ' + people.value + ' people.';
             }
             callback(null, buildResponse(message, true));
+        } else if (intent.name === 'ReinforcementsIntent') {
+            var checkpoint = intent.slots.Checkpoint.value;
+
+            var data = JSON.stringify({
+                message: 'Reinforcements needed at checkpoint ' + checkpoint,
+                name: 'Alexa',
+                channel: 'default',
+            });
+
+            // Object of options to designate where to send our request
+            var options = {
+                host: 'INSERT YOUR API GATEWAY URL HERE',
+                port: '443',
+                path: '/ZombieWorkshopStage/zombie/message',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Content-Length': data.length,
+                },
+            };
+
+            var req = https.request(options, function (res) {
+                var body = '';
+                res.setEncoding('utf8');
+                res.on('data', function (chunk) {
+                    body += chunk;
+                });
+
+                res.on('end', function () {
+                    callback(null, buildResponse('Message sent', true));
+                });
+            });
+            req.write(data);
+            req.end();
         }
     }
 };

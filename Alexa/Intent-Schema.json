@@ -31,6 +31,15 @@
           "type": "AMAZON.NUMBER"
         }
       ]
-    }
+    },
+    {
+  	  "intent": "ReinforcementsIntent",
+  	  "slots": [
+  	    {
+  	      "name": "Checkpoint",
+  	      "type": "AMAZON.NUMBER"
+  	    }
+  	  ]
+  	}
   ]
 }
